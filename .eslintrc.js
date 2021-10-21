@@ -1,32 +1,25 @@
 module.exports = {
-  root: true,
-  env: {
-    node: true,
+  'env': {
+    'browser': true,
+    'es2021': true,
   },
-  extends: [
+  'extends': [
     'plugin:vue/essential',
-    '@vue/airbnb',
-    '@vue/typescript/recommended',
+    'google',
   ],
-  parserOptions: {
-    ecmaVersion: 2020,
+  'parserOptions': {
+    'ecmaVersion': 13,
+    'parser': '@typescript-eslint/parser',
+    'sourceType': 'module',
   },
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'import/prefer-default-export': 'off',
-    '@typescript-eslint/no-explicit-any': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-  },
-  overrides: [
-    {
-      files: [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
-      ],
-      env: {
-        mocha: true,
-      },
-    },
+  'plugins': [
+    'vue',
+    '@typescript-eslint',
   ],
+  'rules': {
+    'max-len': ['warn', {'code': 100}],
+    'new-cap': 'off',
+    'require-jsdoc': 'off',
+    'no-unused-vars': 'warn',
+  },
 };
