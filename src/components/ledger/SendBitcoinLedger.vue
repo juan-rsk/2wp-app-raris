@@ -31,13 +31,13 @@ import {
   Component, Emit,
   Vue,
 } from 'vue-property-decorator';
-import { Action, Getter, State } from 'vuex-class';
+import {Action, Getter, State} from 'vuex-class';
 import SendBitcoinForm from '@/components/exchange/SendBitcoinForm.vue';
 import ConfirmLedgerTransaction from '@/components/ledger/ConfirmLedgerTransaction.vue';
 import TrackingId from '@/components/exchange/TrackingId.vue';
 import LedgerService from '@/services/LedgerService';
 import ApiService from '@/services/ApiService';
-import { PegInTxState } from '@/store/peginTx/types';
+import {PegInTxState} from '@/store/peginTx/types';
 import * as constants from '@/store/constants';
 import {
   AccountBalance, FeeAmountData, LedgerTx, PegInFormValues, SendBitcoinState, TxData,
@@ -119,14 +119,14 @@ export default class SendBitcoinLedger extends Vue {
   ledgerDataReady = false;
 
   ledgerService: LedgerService = new LedgerService(
-    process.env.VUE_APP_COIN ?? constants.BTC_NETWORK_TESTNET,
+      process.env.VUE_APP_COIN ?? constants.BTC_NETWORK_TESTNET,
   );
 
   @State('pegInTx') peginTxState!: PegInTxState;
 
-  @Action(constants.PEGIN_TX_ADD_ADDRESSES, { namespace: 'pegInTx' }) setPeginTxAddresses !: any;
+  @Action(constants.PEGIN_TX_ADD_ADDRESSES, {namespace: 'pegInTx'}) setPeginTxAddresses !: any;
 
-  @Getter(constants.PEGIN_TX_GET_CHANGE_ADDRESS, { namespace: 'pegInTx' }) getChangeAddress!: (accountType: string) => string;
+  @Getter(constants.PEGIN_TX_GET_CHANGE_ADDRESS, {namespace: 'pegInTx'}) getChangeAddress!: (accountType: string) => string;
 
   beforeMount() {
     this.showDialog = localStorage.getItem('BTRD_COOKIE_DISABLED') !== 'true';
@@ -174,12 +174,12 @@ export default class SendBitcoinLedger extends Vue {
       changeAddress: this.getChangeAddress(accountType),
       sessionId: this.peginTxState.sessionId,
     })
-      .then((tx: LedgerTx) => {
-        this.createdTx = tx;
-        this.currentComponent = 'ConfirmLedgerTransaction';
-        return tx;
-      })
-      .catch(console.error);
+        .then((tx: LedgerTx) => {
+          this.createdTx = tx;
+          this.currentComponent = 'ConfirmLedgerTransaction';
+          return tx;
+        })
+        .catch(console.error);
   }
 
   @Emit()
@@ -218,41 +218,41 @@ export default class SendBitcoinLedger extends Vue {
   getAccountAddresses() {
     this.sendBitcoinState = 'loading';
     this.ledgerService.getAddressList(2)
-      .then((addresses) => {
-        this.setPeginTxAddresses(addresses);
-      })
-      .then(() => ApiService
-        .getBalances(this.peginTxState.sessionId, this.peginTxState.addressList))
-      .then((balances: AccountBalance) => {
-        this.balances = {
-          legacy: new SatoshiBig(balances.legacy, 'satoshi'),
-          segwit: new SatoshiBig(balances.segwit, 'satoshi'),
-          nativeSegwit: new SatoshiBig(balances.nativeSegwit, 'satoshi'),
-        };
-        this.ledgerDataReady = true;
-      })
-      .catch((e) => {
-        if (e.statusCode === 27010) {
-          this.deviceError = 'Please unlock your Ledger device.';
-        } else {
-          this.deviceError = e.message;
-        }
-        this.sendBitcoinState = 'error';
-        this.showErrorDialog = true;
-      });
+        .then((addresses) => {
+          this.setPeginTxAddresses(addresses);
+        })
+        .then(() => ApiService
+            .getBalances(this.peginTxState.sessionId, this.peginTxState.addressList))
+        .then((balances: AccountBalance) => {
+          this.balances = {
+            legacy: new SatoshiBig(balances.legacy, 'satoshi'),
+            segwit: new SatoshiBig(balances.segwit, 'satoshi'),
+            nativeSegwit: new SatoshiBig(balances.nativeSegwit, 'satoshi'),
+          };
+          this.ledgerDataReady = true;
+        })
+        .catch((e) => {
+          if (e.statusCode === 27010) {
+            this.deviceError = 'Please unlock your Ledger device.';
+          } else {
+            this.deviceError = e.message;
+          }
+          this.sendBitcoinState = 'error';
+          this.showErrorDialog = true;
+        });
   }
 
   @Emit()
-  getTxFee({ amount, accountType }: {amount: number; accountType: string}) {
+  getTxFee({amount, accountType}: {amount: number; accountType: string}) {
     ApiService.getTxFee(this.peginTxState.sessionId, amount, accountType)
-      .then((txFee) => {
-        this.calculatedFees = {
-          slow: new SatoshiBig(txFee.slow, 'satoshi'),
-          average: new SatoshiBig(txFee.average, 'satoshi'),
-          fast: new SatoshiBig(txFee.fast, 'satoshi'),
-        };
-      })
-      .catch(console.error);
+        .then((txFee) => {
+          this.calculatedFees = {
+            slow: new SatoshiBig(txFee.slow, 'satoshi'),
+            average: new SatoshiBig(txFee.average, 'satoshi'),
+            fast: new SatoshiBig(txFee.fast, 'satoshi'),
+          };
+        })
+        .catch(console.error);
   }
 }
 </script>

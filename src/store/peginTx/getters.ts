@@ -1,8 +1,8 @@
-import { GetterTree } from 'vuex';
+import {GetterTree} from 'vuex';
 import * as constants from '@/store/constants';
-import { PegInTxState } from './types';
-import { RootState } from '../types';
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import {PegInTxState} from './types';
+import {RootState} from '../types';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 
 export const getters: GetterTree<PegInTxState, RootState> = {
   [constants.WALLET_NAME]: (state) => {
@@ -32,30 +32,30 @@ export const getters: GetterTree<PegInTxState, RootState> = {
       let address = '';
       let accountTypePath = '';
       const coin = EnvironmentAccessorService.getEnvironmentVariables().vueAppCoin;
-      const coinPath = coin === 'main' ? "/0'" : "/1'";
+      const coinPath = coin === 'main' ? '/0\'' : '/1\'';
       switch (accountType) {
         case constants.BITCOIN_LEGACY_ADDRESS:
-          accountTypePath = "44'";
+          accountTypePath = '44\'';
           break;
         case constants.BITCOIN_SEGWIT_ADDRESS:
-          accountTypePath = "49'";
+          accountTypePath = '49\'';
           break;
         case constants.BITCOIN_NATIVE_SEGWIT_ADDRESS:
-          accountTypePath = "84'";
+          accountTypePath = '84\'';
           break;
         default:
-          accountTypePath = "44'";
+          accountTypePath = '44\'';
       }
-    // eslint-disable-next-line no-unused-expressions
-    state.addressList?.forEach((walletAddress) => {
-      if (walletAddress.serializedPath === `m/${accountTypePath}${coinPath}/0'/1/0`) address = walletAddress.address;
-    });
-    return address;
+      // eslint-disable-next-line no-unused-expressions
+      state.addressList?.forEach((walletAddress) => {
+        if (walletAddress.serializedPath === `m/${accountTypePath}${coinPath}/0'/1/0`) address = walletAddress.address;
+      });
+      return address;
     },
   [constants.PEGIN_TX_GET_REFUND_ADDRESS]: (state: PegInTxState) => {
     let address = '';
     const coin = EnvironmentAccessorService.getEnvironmentVariables().vueAppCoin;
-    const coinPath = coin === 'main' ? "/0'" : "/1'";
+    const coinPath = coin === 'main' ? '/0\'' : '/1\'';
     // eslint-disable-next-line no-unused-expressions
     state.addressList?.forEach((walletAddress) => {
       if (walletAddress.serializedPath === `m/44'${coinPath}/0'/0/0`) address = walletAddress.address;

@@ -391,16 +391,16 @@ import {
   Vue,
   Component, Prop, Emit, Watch,
 } from 'vue-property-decorator';
-import { Action, Getter, State } from 'vuex-class';
+import {Action, Getter, State} from 'vuex-class';
 import * as rskUtils from '@rsksmart/rsk-utils';
 import Big from 'big.js';
 import * as constants from '@/store/constants';
-import { AccountBalance, FeeAmountData, PegInFormValues } from '@/types';
+import {AccountBalance, FeeAmountData, PegInFormValues} from '@/types';
 import Wallet from '@/components/web3/Wallet.vue';
 import AddressWarningDialog from '@/components/exchange/AddressWarningDialog.vue';
-import { Web3SessionState } from '@/store/session/types';
-import { PegInTxState } from '@/store/peginTx/types';
-import { Machine } from '@/services/utils';
+import {Web3SessionState} from '@/store/session/types';
+import {PegInTxState} from '@/store/peginTx/types';
+import {Machine} from '@/services/utils';
 import SatoshiBig from '@/types/SatoshiBig';
 
 @Component({
@@ -472,13 +472,13 @@ export default class SendBitcoinForm extends Vue {
 
   @State('web3Session') web3SessionState!: Web3SessionState;
 
-  @Getter(constants.WALLET_NAME, { namespace: 'pegInTx' }) walletName!: string;
+  @Getter(constants.WALLET_NAME, {namespace: 'pegInTx'}) walletName!: string;
 
-  @Getter(constants.PEGIN_TX_GET_REFUND_ADDRESS, { namespace: 'pegInTx' }) refundAddress!: string;
+  @Getter(constants.PEGIN_TX_GET_REFUND_ADDRESS, {namespace: 'pegInTx'}) refundAddress!: string;
 
-  @Action(constants.WEB3_SESSION_CLEAR_ACCOUNT, { namespace: 'web3Session' }) clearAccount !: any;
+  @Action(constants.WEB3_SESSION_CLEAR_ACCOUNT, {namespace: 'web3Session'}) clearAccount !: any;
 
-  @Action(constants.SESSION_CONNECT_WEB3, { namespace: 'web3Session' }) connectWeb3 !: any;
+  @Action(constants.SESSION_CONNECT_WEB3, {namespace: 'web3Session'}) connectWeb3 !: any;
 
   get safeAmount(): SatoshiBig {
     return new SatoshiBig(this.bitcoinAmount, 'btc');
@@ -530,9 +530,9 @@ export default class SendBitcoinForm extends Vue {
   }
 
   get computedRskAddress() {
-    if (this.rskAddressSelected !== ''
-      && rskUtils.isAddress(this.rskAddressSelected)
-      && this.rskAddressSelected.startsWith('0x')) {
+    if (this.rskAddressSelected !== '' &&
+      rskUtils.isAddress(this.rskAddressSelected) &&
+      this.rskAddressSelected.startsWith('0x')) {
       return this.rskAddressSelected;
     }
     if (this.useWeb3Wallet && this.web3Address !== '') {
@@ -567,16 +567,16 @@ export default class SendBitcoinForm extends Vue {
 
   get computedFeePlusAmount(): string {
     const feePlusAmount: SatoshiBig = this.safeAmount.plus(this.safeTxFee);
-    return this.fourthDone && this.secondDone
-      ? `${feePlusAmount.toBTCString()} BTC` : this.VALUE_INCOMPLETE_MESSAGE;
+    return this.fourthDone && this.secondDone ?
+      `${feePlusAmount.toBTCString()} BTC` : this.VALUE_INCOMPLETE_MESSAGE;
   }
 
   get computedFeePlusAmountUSD(): string {
     const amountUSD: Big = Big(this.computedBTCAmountUSD);
     const txFeeUSD: Big = Big(this.computedTxFeeUSD);
     const feePlusAmountUSD: Big = amountUSD.plus(txFeeUSD);
-    return this.fourthDone && this.secondDone
-      ? feePlusAmountUSD.toFixed(this.fixedUSDDecimals) : '0.00';
+    return this.fourthDone && this.secondDone ?
+      feePlusAmountUSD.toFixed(this.fixedUSDDecimals) : '0.00';
   }
 
   get txFeeColor() {
@@ -596,8 +596,8 @@ export default class SendBitcoinForm extends Vue {
   }
 
   get formFilled() {
-    return this.firstDone && this.secondDone && this.thirdDone
-      && this.fourthDone;
+    return this.firstDone && this.secondDone && this.thirdDone &&
+      this.fourthDone;
   }
 
   get accountType() {
@@ -640,10 +640,10 @@ export default class SendBitcoinForm extends Vue {
     const feePlusAmount: SatoshiBig = this.safeAmount.plus(this.safeTxFee);
     const minValue: SatoshiBig = new SatoshiBig(this.peginTxState.peginConfiguration.minValue, 'satoshi');
     const maxValue: SatoshiBig = new SatoshiBig(this.peginTxState.peginConfiguration.maxValue, 'satoshi');
-    if (this.safeAmount.lte('0')
-      || feePlusAmount.gt(this.selectedAccountBalance)
-      || this.safeAmount.lt(minValue)
-      || this.safeAmount.gt(maxValue)) {
+    if (this.safeAmount.lte('0') ||
+      feePlusAmount.gt(this.selectedAccountBalance) ||
+      this.safeAmount.lt(minValue) ||
+      this.safeAmount.gt(maxValue)) {
       return true;
     }
     if (this.safeAmount.gt('0') && feePlusAmount.lte(this.selectedAccountBalance)) {
@@ -671,8 +671,8 @@ export default class SendBitcoinForm extends Vue {
   }
 
   get isValidRskAddress() {
-    return !this.useWeb3Wallet
-      ? rskUtils.isValidChecksumAddress(this.computedRskAddress, this.CHAIN_ID) : true;
+    return !this.useWeb3Wallet ?
+      rskUtils.isValidChecksumAddress(this.computedRskAddress, this.CHAIN_ID) : true;
   }
 
   get isValidPegInAddress() {
@@ -710,14 +710,14 @@ export default class SendBitcoinForm extends Vue {
 
   @Watch('rskAddressSelected')
   watchRSKAddressSelected() {
-    this.thirdDone = (rskUtils.isAddress(this.computedRskAddress) && this.computedRskAddress.startsWith('0x'))
-      || (this.useWeb3Wallet && this.web3Address !== '');
+    this.thirdDone = (rskUtils.isAddress(this.computedRskAddress) && this.computedRskAddress.startsWith('0x')) ||
+      (this.useWeb3Wallet && this.web3Address !== '');
   }
 
   @Watch('web3SessionState.account')
   watchWeb3Address() {
-    this.thirdDone = (rskUtils.isAddress(this.computedRskAddress) && this.computedRskAddress.startsWith('0x'))
-      || (this.useWeb3Wallet && this.web3Address !== '');
+    this.thirdDone = (rskUtils.isAddress(this.computedRskAddress) && this.computedRskAddress.startsWith('0x')) ||
+      (this.useWeb3Wallet && this.web3Address !== '');
   }
 
   @Emit()
@@ -753,13 +753,13 @@ export default class SendBitcoinForm extends Vue {
 
   // eslint-disable-next-line class-methods-use-this
   blockLetterKeyDown(e: KeyboardEvent) {
-    if (this.bitcoinAmount.toString().length > 15
-      && !(e.key === 'Backspace'
-        || e.key === 'Delete'
-        || e.key === 'Home'
-        || e.key === 'End'
-        || e.key === 'ArrowRight'
-        || e.key === 'ArrowLeft')) e.preventDefault();
+    if (this.bitcoinAmount.toString().length > 15 &&
+      !(e.key === 'Backspace' ||
+        e.key === 'Delete' ||
+        e.key === 'Home' ||
+        e.key === 'End' ||
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowLeft')) e.preventDefault();
     if (e.key === 'e') e.preventDefault();
     if (e.key === '+') e.preventDefault();
     if (e.key === '-') e.preventDefault();

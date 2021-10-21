@@ -1,4 +1,4 @@
-import { MutationTree } from 'vuex';
+import {MutationTree} from 'vuex';
 import * as constants from '@/store/constants';
 import {
   PeginConfiguration, PegInTxState, Utxo, WalletAddress,

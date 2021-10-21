@@ -1,5 +1,5 @@
-import { Psbt } from 'bitcoinjs-lib';
-import { NormalizedOutput, Tx } from './Common';
+import {Psbt} from 'bitcoinjs-lib';
+import {NormalizedOutput, Tx} from './Common';
 
 export interface LedgerjsTransaction {
   version: Buffer;

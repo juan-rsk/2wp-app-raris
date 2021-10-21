@@ -153,7 +153,7 @@
 import {
   Vue, Component, Prop, Emit,
 } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
+import {Action} from 'vuex-class';
 import * as constants from '@/store/constants';
 import MetaMask from '@/assets/web3/metamask.png';
 import MetaMaskDisabled from '@/assets/web3/metamask-disabled.png';
@@ -162,9 +162,9 @@ import MetaMaskDisabled from '@/assets/web3/metamask-disabled.png';
 export default class Wallet extends Vue {
   @Prop(Boolean) configure!: boolean;
 
-  @Action(constants.SESSION_CONNECT_WEB3, { namespace: 'web3Session' }) sessionConnect !: any;
+  @Action(constants.SESSION_CONNECT_WEB3, {namespace: 'web3Session'}) sessionConnect !: any;
 
-  @Action(constants.WEB3_SESSION_GET_ACCOUNT, { namespace: 'web3Session' }) getAccount !: any;
+  @Action(constants.WEB3_SESSION_GET_ACCOUNT, {namespace: 'web3Session'}) getAccount !: any;
 
   useWeb3Wallet = true;
 

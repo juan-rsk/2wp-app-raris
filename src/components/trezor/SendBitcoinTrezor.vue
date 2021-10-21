@@ -32,14 +32,14 @@ import {
   Component, Emit,
   Vue,
 } from 'vue-property-decorator';
-import { Action, Getter, State } from 'vuex-class';
-import TrezorConnect, { DEVICE, DEVICE_EVENT } from 'trezor-connect';
+import {Action, Getter, State} from 'vuex-class';
+import TrezorConnect, {DEVICE, DEVICE_EVENT} from 'trezor-connect';
 import SendBitcoinForm from '@/components/exchange/SendBitcoinForm.vue';
 import ConfirmTransaction from '@/components/trezor/ConfirmTransaction.vue';
 import TrackingId from '@/components/exchange/TrackingId.vue';
 import TrezorService from '@/services/TrezorService';
 import ApiService from '@/services/ApiService';
-import { PegInTxState } from '@/store/peginTx/types';
+import {PegInTxState} from '@/store/peginTx/types';
 import * as constants from '@/store/constants';
 import {
   AccountBalance, FeeAmountData, PegInFormValues, SendBitcoinState, TrezorTx, TxData,
@@ -124,11 +124,11 @@ export default class SendBitcoinTrezor extends Vue {
 
   @State('pegInTx') peginTxState!: PegInTxState;
 
-  @Action(constants.IS_TREZOR_CONNECTED, { namespace: 'pegInTx' }) setTrezorConnected !: any;
+  @Action(constants.IS_TREZOR_CONNECTED, {namespace: 'pegInTx'}) setTrezorConnected !: any;
 
-  @Action(constants.PEGIN_TX_ADD_ADDRESSES, { namespace: 'pegInTx' }) setPeginTxAddresses !: any;
+  @Action(constants.PEGIN_TX_ADD_ADDRESSES, {namespace: 'pegInTx'}) setPeginTxAddresses !: any;
 
-  @Getter(constants.PEGIN_TX_GET_CHANGE_ADDRESS, { namespace: 'pegInTx' }) getChangeAddress!: (accountType: string) => string;
+  @Getter(constants.PEGIN_TX_GET_CHANGE_ADDRESS, {namespace: 'pegInTx'}) getChangeAddress!: (accountType: string) => string;
 
   beforeMount() {
     this.showDialog = localStorage.getItem('BTRD_COOKIE_DISABLED') !== 'true';
@@ -179,12 +179,12 @@ export default class SendBitcoinTrezor extends Vue {
       changeAddress: this.getChangeAddress(accountType),
       sessionId: this.peginTxState.sessionId,
     })
-      .then((tx: TrezorTx) => {
-        this.createdTx = tx;
-        this.currentComponent = 'ConfirmTransaction';
-        return tx;
-      })
-      .catch(console.error);
+        .then((tx: TrezorTx) => {
+          this.createdTx = tx;
+          this.currentComponent = 'ConfirmTransaction';
+          return tx;
+        })
+        .catch(console.error);
   }
 
   @Emit()
@@ -234,48 +234,48 @@ export default class SendBitcoinTrezor extends Vue {
   getAccountAddresses() {
     this.sendBitcoinState = 'loading';
     this.trezorService.getAddressList(2)
-      .then((addresses) => {
-        this.setPeginTxAddresses(addresses);
-      })
-      .then(() => ApiService
-        .getBalances(this.peginTxState.sessionId, this.peginTxState.addressList))
-      .then((balances: AccountBalance) => {
-        this.balances = {
-          legacy: new SatoshiBig(balances.legacy, 'satoshi'),
-          segwit: new SatoshiBig(balances.segwit, 'satoshi'),
-          nativeSegwit: new SatoshiBig(balances.nativeSegwit, 'satoshi'),
-        };
-        this.trezorDataReady = true;
-      })
-      .catch((e) => {
-        this.deviceError = e.message;
-        this.sendBitcoinState = 'error';
-        this.showErrorDialog = true;
-      });
+        .then((addresses) => {
+          this.setPeginTxAddresses(addresses);
+        })
+        .then(() => ApiService
+            .getBalances(this.peginTxState.sessionId, this.peginTxState.addressList))
+        .then((balances: AccountBalance) => {
+          this.balances = {
+            legacy: new SatoshiBig(balances.legacy, 'satoshi'),
+            segwit: new SatoshiBig(balances.segwit, 'satoshi'),
+            nativeSegwit: new SatoshiBig(balances.nativeSegwit, 'satoshi'),
+          };
+          this.trezorDataReady = true;
+        })
+        .catch((e) => {
+          this.deviceError = e.message;
+          this.sendBitcoinState = 'error';
+          this.showErrorDialog = true;
+        });
   }
 
   @Emit()
-  getUnusedAddresses({ flag, accountType }: {flag: boolean; accountType: string}) {
+  getUnusedAddresses({flag, accountType}: {flag: boolean; accountType: string}) {
     if (flag) {
       this.trezorService.getAccountUnusedAddresses(accountType)
-        .then((ua) => {
-          this.unusedAddresses = ua;
-        })
-        .catch(console.error);
+          .then((ua) => {
+            this.unusedAddresses = ua;
+          })
+          .catch(console.error);
     }
   }
 
   @Emit()
-  getTxFee({ amount, accountType }: {amount: number; accountType: string}) {
+  getTxFee({amount, accountType}: {amount: number; accountType: string}) {
     ApiService.getTxFee(this.peginTxState.sessionId, amount, accountType)
-      .then((txFee) => {
-        this.calculatedFees = {
-          slow: new SatoshiBig(txFee.slow, 'satoshi'),
-          average: new SatoshiBig(txFee.average, 'satoshi'),
-          fast: new SatoshiBig(txFee.fast, 'satoshi'),
-        };
-      })
-      .catch(console.error);
+        .then((txFee) => {
+          this.calculatedFees = {
+            slow: new SatoshiBig(txFee.slow, 'satoshi'),
+            average: new SatoshiBig(txFee.average, 'satoshi'),
+            fast: new SatoshiBig(txFee.fast, 'satoshi'),
+          };
+        })
+        .catch(console.error);
   }
 }
 </script>

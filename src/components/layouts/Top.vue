@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit } from 'vue-property-decorator';
+import {Vue, Component, Emit} from 'vue-property-decorator';
 
 @Component
 export default class Top extends Vue {
@@ -30,7 +30,7 @@ export default class Top extends Vue {
   @Emit()
   toExchange() {
     if (this.$router.currentRoute.name === 'Exchange') this.$router.go(0);
-    this.$router.push({ name: 'Exchange' });
+    this.$router.push({name: 'Exchange'});
   }
 
   @Emit()

@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { isValidOpReturn } from '@/services/OpReturnUtils';
-import { NormalizedOutput } from '@/types';
+import {expect} from 'chai';
+import {isValidOpReturn} from '@/services/OpReturnUtils';
+import {NormalizedOutput} from '@/types';
 /* eslint-disable */
 
 describe('function: isValidOptReturn', () => {

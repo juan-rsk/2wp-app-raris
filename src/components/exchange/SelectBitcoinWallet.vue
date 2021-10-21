@@ -161,7 +161,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Emit } from 'vue-property-decorator';
+import {Vue, Component, Emit} from 'vue-property-decorator';
 import * as constants from '@/store/constants';
 import Trezor from '@/assets/wallet-icons/trezor.png';
 import TrezorWhite from '@/assets/wallet-icons/trezor-white.png';

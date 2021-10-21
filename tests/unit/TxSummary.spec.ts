@@ -1,11 +1,11 @@
-import { shallowMount } from '@vue/test-utils';
-import { expect } from 'chai';
+import {shallowMount} from '@vue/test-utils';
+import {expect} from 'chai';
 import Big from 'big.js';
 import TxSummary from '@/components/exchange/TxSummary.vue';
 import SatoshiBig from '@/types/SatoshiBig';
 
 const factory = (values = {}) => shallowMount(TxSummary, {
-  propsData: { ...values },
+  propsData: {...values},
 });
 
 describe('TxSummary', () => {
@@ -71,13 +71,13 @@ describe('TxSummary', () => {
     testCases.forEach((txSummaryProps) => {
       const wrapper = factory(txSummaryProps);
       const amountUSD = Big(txSummaryProps.txData.amount.toBTCString())
-        .mul(Big(txSummaryProps.price))
-        .toFixed(2);
+          .mul(Big(txSummaryProps.price))
+          .toFixed(2);
       const feeUSD = Big(txSummaryProps.txData.feeBTC.toBTCString())
-        .mul(Big(txSummaryProps.price))
-        .toFixed(2);
+          .mul(Big(txSummaryProps.price))
+          .toFixed(2);
       const totalUSD = Big(feeUSD).plus(Big(amountUSD))
-        .toFixed(2);
+          .toFixed(2);
       expect(wrapper.find('#amount-usd').text()).to.eql(`USD $ ${amountUSD}`);
       expect(wrapper.find('#fee-usd').text()).to.eql(`USD $ ${feeUSD}`);
       expect(wrapper.find('#total-usd').text()).to.eql(`USD $ ${totalUSD}`);

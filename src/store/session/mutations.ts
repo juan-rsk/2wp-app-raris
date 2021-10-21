@@ -1,7 +1,7 @@
-import { MutationTree } from 'vuex';
+import {MutationTree} from 'vuex';
 import Web3 from 'web3';
 import * as constants from '@/store/constants';
-import { Web3SessionState } from './types';
+import {Web3SessionState} from './types';
 
 export const mutations: MutationTree<Web3SessionState> = {
   [constants.SESSION_SET_ACCOUNT]: (state, account: string) => {

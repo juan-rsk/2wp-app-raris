@@ -8,26 +8,26 @@ export default class WalletService {
   }
 
   protected getAccountPath(accountType: string, accountIdx: number) {
-    const coinPath: string = this.coin === constants.BTC_NETWORK_MAINNET ? "/0'" : "/1'";
+    const coinPath: string = this.coin === constants.BTC_NETWORK_MAINNET ? '/0\'' : '/1\'';
     let accountPath = 'm';
     switch (accountType) {
       case constants.BITCOIN_LEGACY_ADDRESS:
-        accountPath += "/44'";
+        accountPath += '/44\'';
         break;
       case constants.BITCOIN_SEGWIT_ADDRESS:
-        accountPath += "/49'";
+        accountPath += '/49\'';
         break;
       case constants.BITCOIN_NATIVE_SEGWIT_ADDRESS:
-        accountPath += "/84'";
+        accountPath += '/84\'';
         break;
       default:
-        accountPath += "/44'";
+        accountPath += '/44\'';
     }
     return `${accountPath}${coinPath}/${accountIdx}'`;
   }
 
   protected getDerivationPath(accountType: string, accountIdx: number, change: boolean,
-    addressIdx: number): string {
+      addressIdx: number): string {
     const changePath: string = change ? '/1' : '/0';
     return `${this.getAccountPath(accountType, accountIdx)}${changePath}/${addressIdx}`;
   }

@@ -1,4 +1,4 @@
-import { Network } from 'bitcoinjs-lib';
+import {Network} from 'bitcoinjs-lib';
 import SatoshiBig from '@/types/SatoshiBig';
 
 export interface Tx {
@@ -16,20 +16,20 @@ export interface NormalizedTx extends Tx {
 
 export interface NormalizedInput {
   address: string;
-  prev_hash: string;
+  prev_hash: string; /* eslint-disable-line camelcase */
   amount: string;
-  address_n: number[];
-  prev_index: number;
-  script_type?: string;
+  address_n: number[]; /* eslint-disable-line camelcase */
+  prev_index: number; /* eslint-disable-line camelcase */
+  script_type?: string; /* eslint-disable-line camelcase */
   sequence?: number;
 }
 
 export interface NormalizedOutput {
   address?: string;
-  address_n?: number[];
+  address_n?: number[]; /* eslint-disable-line camelcase */
   amount: string;
   serializedValue?: string;
-  op_return_data?: string;
+  op_return_data?: string; /* eslint-disable-line camelcase */
 }
 
 export interface Signer {

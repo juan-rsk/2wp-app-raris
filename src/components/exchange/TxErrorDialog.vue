@@ -38,7 +38,7 @@ export default class TxErrorDialog extends Vue {
   @Emit()
   toExchange() {
     if (this.$router.currentRoute.name === 'Exchange') this.$router.go(0);
-    this.$router.push({ name: 'Exchange' });
+    this.$router.push({name: 'Exchange'});
   }
 
   @Emit('closeErrorDialog')

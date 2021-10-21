@@ -1,11 +1,11 @@
-import { TxInputType, TxOutputType } from 'trezor-connect';
+import {TxInputType, TxOutputType} from 'trezor-connect';
 import TrezorTxSigner from '@/middleware/TxSigner/TrezorTxSigner';
-import { WalletAddress } from '@/store/peginTx/types';
+import {WalletAddress} from '@/store/peginTx/types';
 import {
   NormalizedInput, NormalizedOutput, TrezorSignedTx, TrezorTx,
 } from '@/types';
 import ApiService from '@/services/ApiService';
-import { getAccountType } from '@/services/utils';
+import {getAccountType} from '@/services/utils';
 import * as constants from '@/store/constants';
 import TxBuilder from './TxBuilder';
 import store from '../../store';
@@ -33,20 +33,20 @@ export default class TrezorTxBuilder extends TxBuilder {
   }): Promise<TrezorTx> {
     this.changeAddr = changeAddress;
     return new Promise<TrezorTx>((resolve, reject) => {
-      const { coin } = this;
+      const {coin} = this;
       ApiService.createPeginTx(
-        amountToTransferInSatoshi, refundAddress, recipient, sessionId, feeLevel, changeAddress,
+          amountToTransferInSatoshi, refundAddress, recipient, sessionId, feeLevel, changeAddress,
       )
-        .then((normalizedTx) => {
-          const tx = {
-            coin,
-            inputs: TrezorTxBuilder.getInputs(normalizedTx.inputs),
-            outputs: TrezorTxBuilder.getOutputs(normalizedTx.outputs),
-          };
-          this.tx = tx;
-          resolve(tx);
-        })
-        .catch(reject);
+          .then((normalizedTx) => {
+            const tx = {
+              coin,
+              inputs: TrezorTxBuilder.getInputs(normalizedTx.inputs),
+              outputs: TrezorTxBuilder.getOutputs(normalizedTx.outputs),
+            };
+            this.tx = tx;
+            resolve(tx);
+          })
+          .catch(reject);
     });
   }
 

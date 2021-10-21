@@ -1,6 +1,6 @@
-import { expect } from 'chai';
-import { NormalizedOutput } from '@/types';
-import { isValidPowPegAddress } from '@/services/PowPegAddressUtils';
+import {expect} from 'chai';
+import {NormalizedOutput} from '@/types';
+import {isValidPowPegAddress} from '@/services/PowPegAddressUtils';
 /* eslint-disable */
 
 describe('function: isValidPowPegAddress', () => {

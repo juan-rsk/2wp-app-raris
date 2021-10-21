@@ -56,13 +56,13 @@
 import {
   Component, Prop, Vue, Emit,
 } from 'vue-property-decorator';
-import { Getter, State } from 'vuex-class';
+import {Getter, State} from 'vuex-class';
 import * as constants from '@/store/constants';
-import { PegInTxState } from '@/store/peginTx/types';
+import {PegInTxState} from '@/store/peginTx/types';
 import LedgerConnect from '@/assets/exchange/ledger/connect_ledger.png';
 import TrezorConnect from '@/assets/exchange/trezor/connect_trezor.png';
 import Connect from '@/assets/exchange/wallet.png';
-import { SendBitcoinState } from '@/types';
+import {SendBitcoinState} from '@/types';
 
 @Component
 export default class ConnectDevice extends Vue {
@@ -72,7 +72,7 @@ export default class ConnectDevice extends Vue {
 
   @State('pegInTx') peginTxState!: PegInTxState;
 
-  @Getter(constants.WALLET_NAME, { namespace: 'pegInTx' }) walletName!: string;
+  @Getter(constants.WALLET_NAME, {namespace: 'pegInTx'}) walletName!: string;
 
   get deviceImagePath() {
     if (this.peginTxState.bitcoinWallet === constants.WALLET_LEDGER) return LedgerConnect;

@@ -167,13 +167,13 @@
 import {
   Component, Emit, Prop, Vue, Watch,
 } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import {State} from 'vuex-class';
 import TxSummary from '@/components/exchange/TxSummary.vue';
-import { PegStatus } from '@/store/constants';
+import {PegStatus} from '@/store/constants';
 import ApiService from '@/services/ApiService';
-import { PeginStatus } from '@/store/types';
-import { PegInTxState } from '@/store/peginTx/types';
-import { TxData } from '@/types';
+import {PeginStatus} from '@/store/types';
+import {PegInTxState} from '@/store/peginTx/types';
+import {TxData} from '@/types';
 import SatoshiBig from '@/types/SatoshiBig';
 
 @Component({
@@ -210,7 +210,7 @@ export default class Status extends Vue {
 
   btcConfirmationsRequired!: number;
 
-  @Prop({ default: '' }) txIdProp!: string;
+  @Prop({default: ''}) txIdProp!: string;
 
   @State('pegInTx') peginTxState!: PegInTxState;
 
@@ -231,12 +231,12 @@ export default class Status extends Vue {
     if (this.pegInStatus) {
       this.btcConfirmationsRequired = this.pegInStatus.btc.requiredConfirmation;
       this.btcConfirmations = this.pegInStatus.btc.confirmations ?? 0;
-      this.btcConfirmations = this.btcConfirmations > this.btcConfirmationsRequired
-        ? this.btcConfirmationsRequired : this.btcConfirmations;
+      this.btcConfirmations = this.btcConfirmations > this.btcConfirmationsRequired ?
+        this.btcConfirmationsRequired : this.btcConfirmations;
     }
     this.leftBtcTime = this.getTime((this.btcConfirmationsRequired - this.btcConfirmations) * 10);
-    this.btcConfirmationsPercentage = this.btcConfirmations <= this.btcConfirmationsRequired
-      ? (this.btcConfirmations * 100) / this.btcConfirmationsRequired : 100;
+    this.btcConfirmationsPercentage = this.btcConfirmations <= this.btcConfirmationsRequired ?
+      (this.btcConfirmations * 100) / this.btcConfirmationsRequired : 100;
     this.rskConfirmationsPercentage = this.pegInStatus.status === PegStatus.CONFIRMED ? 100 : 0;
   }
 
@@ -245,20 +245,20 @@ export default class Status extends Vue {
     if (this.txId !== '') {
       this.loading = true;
       this.error = false;
-      if (this.$route.path !== `/status/txId/${this.txId}`) this.$router.push({ name: 'Status', params: { txId: this.txId } });
+      if (this.$route.path !== `/status/txId/${this.txId}`) this.$router.push({name: 'Status', params: {txId: this.txId}});
       ApiService.getPegInStatus(this.txId)
-        .then((pegInStatus: PeginStatus) => {
-          this.pegInStatus = pegInStatus;
-          this.setMessage();
-          this.setSummary();
-          this.refreshPercentage();
-          this.loading = false;
-        })
-        .catch((e: Error) => {
-          this.errorMessage = e.message;
-          this.error = true;
-          this.loading = false;
-        });
+          .then((pegInStatus: PeginStatus) => {
+            this.pegInStatus = pegInStatus;
+            this.setMessage();
+            this.setSummary();
+            this.refreshPercentage();
+            this.loading = false;
+          })
+          .catch((e: Error) => {
+            this.errorMessage = e.message;
+            this.error = true;
+            this.loading = false;
+          });
     }
   }
 
@@ -344,7 +344,7 @@ export default class Status extends Vue {
     this.statusMessage = '';
   }
 
-  @Watch('$route', { immediate: true, deep: true })
+  @Watch('$route', {immediate: true, deep: true})
   onUrlChange() {
     if (this.txIdProp) {
       this.txId = this.txIdProp ?? '';

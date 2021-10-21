@@ -1,4 +1,4 @@
-import { NormalizedOutput } from '@/types';
+import {NormalizedOutput} from '@/types';
 
 export function isValidPowPegAddress(outputs: NormalizedOutput[], powPegAddress: string): boolean {
   for (let i = 0; outputs && i < outputs.length; i += 1) {

@@ -1,7 +1,7 @@
-import { bridge } from '@rsksmart/rsk-precompiled-abis';
+import {bridge} from '@rsksmart/rsk-precompiled-abis';
 import Web3 from 'web3';
-import { Contract } from 'web3-eth-contract';
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import {Contract} from 'web3-eth-contract';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 
 export class BridgeService {
   private bridgeContract: Contract;
@@ -16,10 +16,10 @@ export class BridgeService {
   public getFederationAddress(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       this.bridgeContract.methods
-        .getFederationAddress()
-        .call()
-        .then(resolve)
-        .catch(reject);
+          .getFederationAddress()
+          .call()
+          .then(resolve)
+          .catch(reject);
     });
   }
 }

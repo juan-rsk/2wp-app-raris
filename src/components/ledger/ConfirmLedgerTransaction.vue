@@ -172,8 +172,8 @@ import {
   Component, Emit, Prop,
   Vue,
 } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
-import { ConfirmTxState, TrezorTx, TxData } from '@/types';
+import {Getter} from 'vuex-class';
+import {ConfirmTxState, TrezorTx, TxData} from '@/types';
 import TxSummary from '@/components/exchange/TxSummary.vue';
 import LedgerTxBuilder from '@/middleware/TxBuilder/LedgerTxBuilder';
 import ApiService from '@/services/ApiService';
@@ -206,7 +206,7 @@ export default class ConfirmLedgerTransaction extends Vue {
 
   @Prop() price!: number;
 
-  @Getter(constants.PEGIN_TX_GET_CHANGE_ADDRESS, { namespace: 'pegInTx' }) getChangeAddress!: (accountType: string) => string;
+  @Getter(constants.PEGIN_TX_GET_CHANGE_ADDRESS, {namespace: 'pegInTx'}) getChangeAddress!: (accountType: string) => string;
 
   get showUnverifiedInputsDialog() {
     return this.txBuilder.accountType === constants.BITCOIN_SEGWIT_ADDRESS && this.confirmTxState === 'loading';
@@ -216,19 +216,19 @@ export default class ConfirmLedgerTransaction extends Vue {
   async toTrackId() {
     this.confirmTxState = 'loading';
     await this.txBuilder.sign()
-      .then((tx) => ApiService
-        .broadcast(tx.signedTx))
-      .then((txId) => {
-        this.txId = txId;
-      })
-      .catch((err) => {
-        this.confirmTxState = 'error';
-        if (err.statusCode === 27013) {
-          this.txError = 'Transaction cancelled by user.';
-        } else {
-          this.txError = err.message;
-        }
-      });
+        .then((tx) => ApiService
+            .broadcast(tx.signedTx))
+        .then((txId) => {
+          this.txId = txId;
+        })
+        .catch((err) => {
+          this.confirmTxState = 'error';
+          if (err.statusCode === 27013) {
+            this.txError = 'Transaction cancelled by user.';
+          } else {
+            this.txError = err.message;
+          }
+        });
     return [this.txError, this.txId];
   }
 
@@ -253,9 +253,9 @@ export default class ConfirmLedgerTransaction extends Vue {
   }
 
   get changeAddress() {
-    return this.getChangeAddress(this.txBuilder.accountType) !== ''
-      ? this.getChangeAddress(this.txBuilder.accountType)
-      : 'Change address not found';
+    return this.getChangeAddress(this.txBuilder.accountType) !== '' ?
+      this.getChangeAddress(this.txBuilder.accountType) :
+      'Change address not found';
   }
 
   get changeAmount() {

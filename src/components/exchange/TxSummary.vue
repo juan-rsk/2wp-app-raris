@@ -162,7 +162,7 @@ import {
   Vue,
 } from 'vue-property-decorator';
 import Big from 'big.js';
-import { TxData } from '@/types';
+import {TxData} from '@/types';
 import * as constants from '@/store/constants';
 
 @Component
@@ -223,12 +223,12 @@ export default class TxSummary extends Vue {
 
   get chunkedRecipientAddress() {
     return this.txData.recipient ? `${this.txData.recipient.substr(0, 25)}...${this
-      .txData.recipient.substr(38, 42)}` : this.VALUE_INCOMPLETE_MESSAGE;
+        .txData.recipient.substr(38, 42)}` : this.VALUE_INCOMPLETE_MESSAGE;
   }
 
   get chunkedRefundAddress() {
     return this.txData.refundAddress ? `${this.txData.refundAddress.substr(0, 24)}...${this
-      .txData.refundAddress.substr(31, 35)}` : this.VALUE_INCOMPLETE_MESSAGE;
+        .txData.refundAddress.substr(31, 35)}` : this.VALUE_INCOMPLETE_MESSAGE;
   }
 
   get computedTxId() {

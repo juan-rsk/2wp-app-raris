@@ -186,7 +186,7 @@ import {
   Vue,
 } from 'vue-property-decorator';
 import TrezorTxBuilder from '@/middleware/TxBuilder/TrezorTxBuilder';
-import { ConfirmTxState, TrezorTx, TxData } from '@/types';
+import {ConfirmTxState, TrezorTx, TxData} from '@/types';
 import TxSummary from '@/components/exchange/TxSummary.vue';
 import ApiService from '@/services/ApiService';
 import SatoshiBig from '@/types/SatoshiBig';
@@ -219,15 +219,15 @@ export default class ConfirmTransaction extends Vue {
   async toTrackId() {
     this.confirmTxState = 'loading';
     await this.txBuilder.sign()
-      .then((trezorSignedTx) => ApiService
-        .broadcast(trezorSignedTx.payload.serializedTx))
-      .then((txId) => {
-        this.txId = txId;
-      })
-      .catch((err) => {
-        this.confirmTxState = 'error';
-        this.txError = err.message;
-      });
+        .then((trezorSignedTx) => ApiService
+            .broadcast(trezorSignedTx.payload.serializedTx))
+        .then((txId) => {
+          this.txId = txId;
+        })
+        .catch((err) => {
+          this.confirmTxState = 'error';
+          this.txError = err.message;
+        });
     return [this.txError, this.txId];
   }
 
@@ -248,10 +248,10 @@ export default class ConfirmTransaction extends Vue {
   }
 
   get opReturnData(): string {
-    const opReturnDataOutput = this.tx?.outputs[0] ?? { script_type: '' };
-    return opReturnDataOutput.script_type === 'PAYTOOPRETURN'
-      ? `${opReturnDataOutput.op_return_data.substr(0, 45)}...`
-      : 'OP_RETURN data not found';
+    const opReturnDataOutput = this.tx?.outputs[0] ?? {script_type: ''};
+    return opReturnDataOutput.script_type === 'PAYTOOPRETURN' ?
+      `${opReturnDataOutput.op_return_data.substr(0, 45)}...` :
+      'OP_RETURN data not found';
   }
 
   get rskFederationAddress():string {
@@ -259,9 +259,9 @@ export default class ConfirmTransaction extends Vue {
   }
 
   get changeAddress(): string {
-    return this.txBuilder.changeAddress !== ''
-      ? this.txBuilder.changeAddress
-      : 'Change address not found';
+    return this.txBuilder.changeAddress !== '' ?
+      this.txBuilder.changeAddress :
+      'Change address not found';
   }
 
   get changeAmount(): string {
@@ -272,8 +272,8 @@ export default class ConfirmTransaction extends Vue {
   get computedFullAmount(): string {
     const changeAmount = new SatoshiBig(this.tx?.outputs[2]?.amount ?? 0, 'satoshi');
     return this.txData.amount.plus(this.txData.feeBTC)
-      .plus(changeAmount)
-      .toBTCTrimmedString();
+        .plus(changeAmount)
+        .toBTCTrimmedString();
   }
 
   created() {

@@ -1,4 +1,4 @@
-import { PegStatus } from '@/store/constants';
+import {PegStatus} from '@/store/constants';
 
 export interface RootState {
   version: string;

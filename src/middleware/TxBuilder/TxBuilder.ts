@@ -1,6 +1,6 @@
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 import TxSigner from '@/middleware/TxSigner/TxSigner';
-import { Tx } from '@/types';
+import {Tx} from '@/types';
 
 export default abstract class TxBuilder {
   protected signer!: TxSigner;

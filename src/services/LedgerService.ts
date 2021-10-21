@@ -4,63 +4,63 @@ import _ from 'lodash';
 import * as bitcoin from 'bitcoinjs-lib';
 import WalletService from '@/services/WalletService';
 import * as constants from '@/store/constants';
-import { WalletAddress } from '@/store/peginTx/types';
+import {WalletAddress} from '@/store/peginTx/types';
 import {
   LedgerjsTransaction, LedgerTx, Signer,
 } from '@/types';
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 
 export default class LedgerService extends WalletService {
   private network: bitcoin.Network;
 
   constructor(coin: string) {
     super(coin);
-    this.network = coin === constants.BTC_NETWORK_MAINNET
-      ? bitcoin.networks.bitcoin : bitcoin.networks.testnet;
+    this.network = coin === constants.BTC_NETWORK_MAINNET ?
+      bitcoin.networks.bitcoin : bitcoin.networks.testnet;
   }
 
   public static splitTransaction(hexTx: string): Promise<LedgerjsTransaction> {
     return new Promise<LedgerjsTransaction>((resolve, reject) => {
       TransportWebUSB.create()
-        .then((transport: TransportWebUSB) => {
-          const btc = new AppBtc(transport);
-          const bitcoinJsTx = bitcoin.Transaction.fromHex(hexTx);
-          const tx = btc.splitTransaction(hexTx, bitcoinJsTx.hasWitnesses());
-          return Promise.all([tx, transport.close()]);
-        })
-        .then(([tx]) => resolve(tx))
-        .catch(reject);
+          .then((transport: TransportWebUSB) => {
+            const btc = new AppBtc(transport);
+            const bitcoinJsTx = bitcoin.Transaction.fromHex(hexTx);
+            const tx = btc.splitTransaction(hexTx, bitcoinJsTx.hasWitnesses());
+            return Promise.all([tx, transport.close()]);
+          })
+          .then(([tx]) => resolve(tx))
+          .catch(reject);
     });
   }
 
   static splitTransactionList(txHexList: string[]): Promise<LedgerjsTransaction[]> {
     return new Promise<LedgerjsTransaction[]>((resolve, reject) => {
       TransportWebUSB.create()
-        .then((transport: TransportWebUSB) => {
-          const btc = new AppBtc(transport);
-          return Promise.all([
-            txHexList.map((tx) => {
-              const bitcoinJsTx = bitcoin.Transaction.fromHex(tx);
-              return btc.splitTransaction(tx, bitcoinJsTx.hasWitnesses());
-            }),
-            transport.close(),
-          ]);
-        })
-        .then(([txList]) => resolve(txList))
-        .catch(reject);
+          .then((transport: TransportWebUSB) => {
+            const btc = new AppBtc(transport);
+            return Promise.all([
+              txHexList.map((tx) => {
+                const bitcoinJsTx = bitcoin.Transaction.fromHex(tx);
+                return btc.splitTransaction(tx, bitcoinJsTx.hasWitnesses());
+              }),
+              transport.close(),
+            ]);
+          })
+          .then(([txList]) => resolve(txList))
+          .catch(reject);
     });
   }
 
   public static serializeTransactionOutputs(splitTx: LedgerjsTransaction): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       TransportWebUSB.create()
-        .then((transport: TransportWebUSB) => {
-          const btc = new AppBtc(transport);
-          const txOutputsBuffer: Buffer = btc.serializeTransactionOutputs(splitTx);
-          return Promise.all([txOutputsBuffer, transport.close()]);
-        })
-        .then(([txOutBuffer]) => resolve(txOutBuffer.toString('hex')))
-        .catch(reject);
+          .then((transport: TransportWebUSB) => {
+            const btc = new AppBtc(transport);
+            const txOutputsBuffer: Buffer = btc.serializeTransactionOutputs(splitTx);
+            return Promise.all([txOutputsBuffer, transport.close()]);
+          })
+          .then(([txOutBuffer]) => resolve(txOutBuffer.toString('hex')))
+          .catch(reject);
     });
   }
 
@@ -72,17 +72,17 @@ export default class LedgerService extends WalletService {
       _.range(2).forEach(() => {
         bundle.push({
           derivationPath: this.getDerivationPath(constants
-            .BITCOIN_LEGACY_ADDRESS, accountIndex, change, index),
+              .BITCOIN_LEGACY_ADDRESS, accountIndex, change, index),
           format: 'legacy',
         });
         bundle.push({
           derivationPath: this.getDerivationPath(constants
-            .BITCOIN_SEGWIT_ADDRESS, accountIndex, change, index),
+              .BITCOIN_SEGWIT_ADDRESS, accountIndex, change, index),
           format: 'p2sh',
         });
         bundle.push({
           derivationPath: this.getDerivationPath(constants
-            .BITCOIN_NATIVE_SEGWIT_ADDRESS, accountIndex, change, index),
+              .BITCOIN_NATIVE_SEGWIT_ADDRESS, accountIndex, change, index),
           format: 'bech32',
         });
         change = !change;
@@ -103,9 +103,9 @@ export default class LedgerService extends WalletService {
         const btc = new AppBtc(transport);
         // eslint-disable-next-line no-restricted-syntax
         for (const item of bundle) {
-          const { derivationPath, format } = item;
+          const {derivationPath, format} = item;
           // eslint-disable-next-line no-await-in-loop
-          const walletPublicKey = await btc.getWalletPublicKey(derivationPath, { format });
+          const walletPublicKey = await btc.getWalletPublicKey(derivationPath, {format});
           walletAddresses.push({
             address: walletPublicKey.bitcoinAddress,
             serializedPath: derivationPath,
@@ -141,36 +141,36 @@ export default class LedgerService extends WalletService {
   }
 
   static compressPublicKey(pubKey: string) {
-    const { publicKey } = bitcoin.ECPair.fromPublicKey(Buffer.from(pubKey, 'hex'));
+    const {publicKey} = bitcoin.ECPair.fromPublicKey(Buffer.from(pubKey, 'hex'));
     return publicKey.toString('hex');
   }
 
   public static signTx(tx: LedgerTx): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       TransportWebUSB.create()
-        .then((transport: TransportWebUSB) => {
-          const btc = new AppBtc(transport);
-          return btc.createPaymentTransactionNew({
-            inputs: tx.inputs.map((input) => [input.tx, input.outputIndex, null, null]),
-            associatedKeysets: tx.associatedKeysets,
-            outputScriptHex: tx.outputScriptHex,
-          });
-        })
-        .then(resolve)
-        .catch(reject);
+          .then((transport: TransportWebUSB) => {
+            const btc = new AppBtc(transport);
+            return btc.createPaymentTransactionNew({
+              inputs: tx.inputs.map((input) => [input.tx, input.outputIndex, null, null]),
+              associatedKeysets: tx.associatedKeysets,
+              outputScriptHex: tx.outputScriptHex,
+            });
+          })
+          .then(resolve)
+          .catch(reject);
     });
   }
 
   private getRedeem(publicKey: string) {
     const pubkey = LedgerService.compressPublicKey(publicKey);
     const pair = bitcoin.ECPair.fromPublicKey(Buffer.from(pubkey, 'hex'));
-    const p2wpkh = bitcoin.payments.p2wpkh({ pubkey: pair.publicKey, network: this.network });
-    const p2sh = bitcoin.payments.p2sh({ redeem: p2wpkh, network: this.network });
+    const p2wpkh = bitcoin.payments.p2wpkh({pubkey: pair.publicKey, network: this.network});
+    const p2sh = bitcoin.payments.p2sh({redeem: p2wpkh, network: this.network});
     return p2sh.redeem?.output;
   }
 
   signSegwitTx(tx: LedgerTx): Promise<string> {
-    const psbt = new bitcoin.Psbt({ network: this.network });
+    const psbt = new bitcoin.Psbt({network: this.network});
     return new Promise<string>((resolve, reject) => {
       tx.inputs.forEach((input) => {
         const utxo = bitcoin.Transaction.fromHex(input.hex);
@@ -185,7 +185,7 @@ export default class LedgerService extends WalletService {
       tx.outputs.forEach((output) => {
         if (output.op_return_data) {
           const buffer = Buffer.from(output.op_return_data, 'hex');
-          const script: bitcoin.Payment = bitcoin.payments.embed({ data: [buffer] });
+          const script: bitcoin.Payment = bitcoin.payments.embed({data: [buffer]});
           if (script.output) {
             psbt.addOutput({
               script: script.output,
@@ -201,17 +201,17 @@ export default class LedgerService extends WalletService {
       });
       psbt.setVersion(2);
       this.signP2SH(tx)
-        .then((signatures) => signatures
-          .map((signature, index) => psbt
-            .signInput(index, this.generateSigner(signature, tx.inputs[index].publicKey))))
-        .then(() => psbt.validateSignaturesOfAllInputs())
-        .then((validatedTx) => {
-          if (!validatedTx) reject(new Error('Invalid Transaction.'));
-          psbt.finalizeAllInputs();
-          const hexTx = psbt.extractTransaction().toHex();
-          resolve(hexTx);
-        })
-        .catch(reject);
+          .then((signatures) => signatures
+              .map((signature, index) => psbt
+                  .signInput(index, this.generateSigner(signature, tx.inputs[index].publicKey))))
+          .then(() => psbt.validateSignaturesOfAllInputs())
+          .then((validatedTx) => {
+            if (!validatedTx) reject(new Error('Invalid Transaction.'));
+            psbt.finalizeAllInputs();
+            const hexTx = psbt.extractTransaction().toHex();
+            resolve(hexTx);
+          })
+          .catch(reject);
     });
   }
 
@@ -236,31 +236,31 @@ export default class LedgerService extends WalletService {
       const SIGHASH_ALL = 1;
       const TX_VERSION = 2;
       TransportWebUSB.create()
-        .then((transport: TransportWebUSB) => {
-          const btc = new AppBtc(transport);
-          return btc.signP2SHTransaction({
-            inputs: tx.inputs.map((input) => [
-              input.tx,
-              input.outputIndex,
-              this.getLedgerRedeemScript(input.publicKey),
-              null,
-            ]),
-            transactionVersion: TX_VERSION,
-            associatedKeysets: tx.associatedKeysets,
-            outputScriptHex: tx.outputScriptHex,
-            lockTime: LOCK_TIME,
-            sigHashType: SIGHASH_ALL,
-            segwit: true,
-          });
-        })
-        .then(resolve)
-        .catch(reject);
+          .then((transport: TransportWebUSB) => {
+            const btc = new AppBtc(transport);
+            return btc.signP2SHTransaction({
+              inputs: tx.inputs.map((input) => [
+                input.tx,
+                input.outputIndex,
+                this.getLedgerRedeemScript(input.publicKey),
+                null,
+              ]),
+              transactionVersion: TX_VERSION,
+              associatedKeysets: tx.associatedKeysets,
+              outputScriptHex: tx.outputScriptHex,
+              lockTime: LOCK_TIME,
+              sigHashType: SIGHASH_ALL,
+              segwit: true,
+            });
+          })
+          .then(resolve)
+          .catch(reject);
     });
   }
 
   private getLedgerRedeemScript(publicKey: string): string {
     const pubkey = Buffer.from(LedgerService.compressPublicKey(publicKey), 'hex');
-    const p2pkh = bitcoin.payments.p2pkh({ pubkey, network: this.network });
+    const p2pkh = bitcoin.payments.p2pkh({pubkey, network: this.network});
     if (p2pkh.output) {
       return p2pkh.output.toString('hex');
     }
@@ -272,43 +272,43 @@ export default class LedgerService extends WalletService {
     Promise<{name: string; version: string; flags: Buffer}> {
     return new Promise<{name: string; version: string; flags: Buffer}>((resolve, reject) => {
       transport.send(0xb0, 0x01, 0x00, 0x00)
-        .then((response: Buffer) => {
-          let i = 1;
-          // eslint-disable-next-line no-plusplus
-          const nameLength = response[i++];
-          const name = response.slice(i, (i += nameLength)).toString('ascii');
-          // eslint-disable-next-line no-plusplus
-          const versionLength = response[i++];
-          const version = response.slice(i, (i += versionLength)).toString('ascii');
-          // eslint-disable-next-line no-plusplus
-          const flagLength = response[i++];
-          const flags = response.slice(i, (i += flagLength));
-          resolve({ name, version, flags });
-        })
-        .catch(reject);
+          .then((response: Buffer) => {
+            let i = 1;
+            // eslint-disable-next-line no-plusplus
+            const nameLength = response[i++];
+            const name = response.slice(i, (i += nameLength)).toString('ascii');
+            // eslint-disable-next-line no-plusplus
+            const versionLength = response[i++];
+            const version = response.slice(i, (i += versionLength)).toString('ascii');
+            // eslint-disable-next-line no-plusplus
+            const flagLength = response[i++];
+            const flags = response.slice(i, (i += flagLength));
+            resolve({name, version, flags});
+          })
+          .catch(reject);
     });
   }
 
   private static async checkApp(transport: TransportWebUSB): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       LedgerService.getApp(transport)
-        .then(({ name }) => {
-          const network = EnvironmentAccessorService.getEnvironmentVariables().vueAppCoin;
-          let valid: boolean;
-          switch (name) {
-            case constants.LEDGER_APP_BTC_TEST:
-              valid = network === constants.BTC_NETWORK_TESTNET;
-              break;
-            case constants.LEDGER_APP_BTC:
-              valid = network === constants.BTC_NETWORK_MAINNET;
-              break;
-            default:
-              valid = false;
-          }
-          if (valid) resolve();
-          else reject(new Error('You are not in the required App. Check your Ledger device and try again'));
-        })
-        .catch(reject);
+          .then(({name}) => {
+            const network = EnvironmentAccessorService.getEnvironmentVariables().vueAppCoin;
+            let valid: boolean;
+            switch (name) {
+              case constants.LEDGER_APP_BTC_TEST:
+                valid = network === constants.BTC_NETWORK_TESTNET;
+                break;
+              case constants.LEDGER_APP_BTC:
+                valid = network === constants.BTC_NETWORK_MAINNET;
+                break;
+              default:
+                valid = false;
+            }
+            if (valid) resolve();
+            else reject(new Error('You are not in the required App. Check your Ledger device and try again'));
+          })
+          .catch(reject);
     });
   }
 
@@ -321,7 +321,7 @@ export default class LedgerService extends WalletService {
     tx.outputs.forEach((normalizedOutput) => {
       if (normalizedOutput.op_return_data) {
         const buffer = Buffer.from(normalizedOutput.op_return_data, 'hex');
-        const script: bitcoin.Payment = bitcoin.payments.embed({ data: [buffer] });
+        const script: bitcoin.Payment = bitcoin.payments.embed({data: [buffer]});
         if (script.output) {
           txBuilder.addOutput(script.output, 0);
         }

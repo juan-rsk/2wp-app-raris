@@ -1,19 +1,19 @@
-import TrezorConnect, { GetAddress } from 'trezor-connect';
+import TrezorConnect, {GetAddress} from 'trezor-connect';
 import * as bitcoin from 'bitcoinjs-lib';
-import { Network } from 'bitcoinjs-lib';
-import { WalletAddress } from '@/store/peginTx/types';
+import {Network} from 'bitcoinjs-lib';
+import {WalletAddress} from '@/store/peginTx/types';
 import * as constants from '@/store/constants';
-import { TrezorSignedTx, TrezorTx, Tx } from '@/types';
+import {TrezorSignedTx, TrezorTx, Tx} from '@/types';
 import WalletService from '@/services/WalletService';
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 
 export default class TrezorService extends WalletService {
   private network: Network;
 
   constructor(coin: string) {
     super(coin);
-    this.network = coin === constants.BTC_NETWORK_MAINNET
-      ? bitcoin.networks.bitcoin : bitcoin.networks.testnet;
+    this.network = coin === constants.BTC_NETWORK_MAINNET ?
+      bitcoin.networks.bitcoin : bitcoin.networks.testnet;
     TrezorConnect.manifest({
       email: EnvironmentAccessorService.getEnvironmentVariables().vueAppManifestEmail,
       appUrl: EnvironmentAccessorService.getEnvironmentVariables().vueAppManifestAppUrl,
@@ -25,37 +25,37 @@ export default class TrezorService extends WalletService {
     for (let index = 0; index < batch; index += 1) {
       bundle.push({
         path: this.getDerivationPath(constants
-          .BITCOIN_LEGACY_ADDRESS, accountIndex, false, index),
+            .BITCOIN_LEGACY_ADDRESS, accountIndex, false, index),
         showOnTrezor: false,
         coin: this.coin,
       });
       bundle.push({
         path: this.getDerivationPath(constants
-          .BITCOIN_LEGACY_ADDRESS, accountIndex, true, index),
+            .BITCOIN_LEGACY_ADDRESS, accountIndex, true, index),
         showOnTrezor: false,
         coin: this.coin,
       });
       bundle.push({
         path: this.getDerivationPath(constants
-          .BITCOIN_SEGWIT_ADDRESS, accountIndex, false, index),
+            .BITCOIN_SEGWIT_ADDRESS, accountIndex, false, index),
         showOnTrezor: false,
         coin: this.coin,
       });
       bundle.push({
         path: this.getDerivationPath(constants
-          .BITCOIN_SEGWIT_ADDRESS, accountIndex, true, index),
+            .BITCOIN_SEGWIT_ADDRESS, accountIndex, true, index),
         showOnTrezor: false,
         coin: this.coin,
       });
       bundle.push({
         path: this.getDerivationPath(constants
-          .BITCOIN_NATIVE_SEGWIT_ADDRESS, accountIndex, false, index),
+            .BITCOIN_NATIVE_SEGWIT_ADDRESS, accountIndex, false, index),
         showOnTrezor: false,
         coin: this.coin,
       });
       bundle.push({
         path: this.getDerivationPath(constants
-          .BITCOIN_NATIVE_SEGWIT_ADDRESS, accountIndex, true, index),
+            .BITCOIN_NATIVE_SEGWIT_ADDRESS, accountIndex, true, index),
         showOnTrezor: false,
         coin: this.coin,
       });
@@ -69,15 +69,15 @@ export default class TrezorService extends WalletService {
       TrezorConnect.getAddress({
         bundle,
       })
-        .then((result) => {
-          if (!result.success) reject(new Error(result.payload.error));
-          const addresses: WalletAddress[] = [];
-          Object.entries(result.payload).forEach((obj) => {
-            addresses.push(obj[1]);
-          });
-          resolve(addresses);
-        })
-        .catch(reject);
+          .then((result) => {
+            if (!result.success) reject(new Error(result.payload.error));
+            const addresses: WalletAddress[] = [];
+            Object.entries(result.payload).forEach((obj) => {
+              addresses.push(obj[1]);
+            });
+            resolve(addresses);
+          })
+          .catch(reject);
     });
   }
 
@@ -88,21 +88,21 @@ export default class TrezorService extends WalletService {
         coin: this.coin,
         details: 'txs',
       })
-        .then((result) => {
-          if (!result.success) reject(new Error(result.payload.error));
-          const unusedAddresses: string[] = [];
-          if ('addresses' in result.payload) {
-            const { addresses } = result.payload;
-            if (addresses && 'unused' in addresses) {
-              Object.entries(addresses.unused)
-                .forEach((obj) => {
-                  unusedAddresses.push(obj[1].address);
-                });
+          .then((result) => {
+            if (!result.success) reject(new Error(result.payload.error));
+            const unusedAddresses: string[] = [];
+            if ('addresses' in result.payload) {
+              const {addresses} = result.payload;
+              if (addresses && 'unused' in addresses) {
+                Object.entries(addresses.unused)
+                    .forEach((obj) => {
+                      unusedAddresses.push(obj[1].address);
+                    });
+              }
             }
-          }
-          resolve(unusedAddresses);
-        })
-        .catch(reject);
+            resolve(unusedAddresses);
+          })
+          .catch(reject);
     });
   }
 
@@ -115,20 +115,20 @@ export default class TrezorService extends WalletService {
         coin: this.coin,
         push: false,
       })
-        .then((res) => {
-          if (res.success) {
-            resolve({
-              success: res.success,
-              payload: {
-                signatures: res.payload.signatures,
-                serializedTx: res.payload.serializedTx,
-              },
-            });
-          } else {
-            reject(new Error(res.payload.error));
-          }
-        })
-        .catch(reject);
+          .then((res) => {
+            if (res.success) {
+              resolve({
+                success: res.success,
+                payload: {
+                  signatures: res.payload.signatures,
+                  serializedTx: res.payload.serializedTx,
+                },
+              });
+            } else {
+              reject(new Error(res.payload.error));
+            }
+          })
+          .catch(reject);
     });
   }
 
@@ -140,7 +140,7 @@ export default class TrezorService extends WalletService {
     tx.outputs.forEach((normalizedOutput) => {
       if (normalizedOutput.script_type === 'PAYTOOPRETURN') {
         const buffer = Buffer.from(normalizedOutput.op_return_data, 'hex');
-        const script: bitcoin.Payment = bitcoin.payments.embed({ data: [buffer] });
+        const script: bitcoin.Payment = bitcoin.payments.embed({data: [buffer]});
         if (script.output) {
           txBuilder.addOutput(script.output, 0);
         }

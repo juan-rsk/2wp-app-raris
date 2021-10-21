@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import VueRouter, { RouteConfig } from 'vue-router';
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import VueRouter, {RouteConfig} from 'vue-router';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 import Exchange from '../views/Exchange.vue';
 
 Vue.use(VueRouter);
@@ -20,7 +20,7 @@ const routes: Array<RouteConfig> = [
     path: '/status/txId/:txId',
     name: 'Status',
     component: () => import(/* webpackChunkName: "transactions" */ '../views/Status.vue'),
-    props: (route) => ({ txIdProp: route.params.txId }),
+    props: (route) => ({txIdProp: route.params.txId}),
   },
   {
     path: '/status',

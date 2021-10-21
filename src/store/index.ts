@@ -1,8 +1,8 @@
 import Vue from 'vue';
-import Vuex, { StoreOptions } from 'vuex';
-import { RootState } from './types';
-import { pegInTx } from './peginTx';
-import { web3Session } from './session';
+import Vuex, {StoreOptions} from 'vuex';
+import {RootState} from './types';
+import {pegInTx} from './peginTx';
+import {web3Session} from './session';
 
 Vue.use(Vuex);
 

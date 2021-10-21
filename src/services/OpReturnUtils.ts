@@ -1,7 +1,7 @@
-import { address, networks } from 'bitcoinjs-lib';
-import { NormalizedOutput } from '@/types';
+import {address, networks} from 'bitcoinjs-lib';
+import {NormalizedOutput} from '@/types';
 import * as constants from '@/store/constants';
-import { EnvironmentAccessorService } from '@/services/enviroment-accessor.service';
+import {EnvironmentAccessorService} from '@/services/enviroment-accessor.service';
 
 function getAddressType(type: string, network: networks.Network): number {
   switch (type) {
@@ -57,18 +57,18 @@ function getRefundAddress(addressRefundInfo: string): string {
 }
 
 export function isValidOpReturn(
-  outputs: NormalizedOutput[],
-  destinationRskAddress: string,
-  refundBtcAddress: string,
+    outputs: NormalizedOutput[],
+    destinationRskAddress: string,
+    refundBtcAddress: string,
 ): boolean {
   let destinationRskAddressFound = '';
   let refundBtcAddressFound = '';
 
   for (let i = 0; outputs && i < outputs.length; i += 1) {
     const output: NormalizedOutput = outputs[i];
-    if (output.op_return_data
-      && output.op_return_data.length === 92
-      && output.op_return_data.substr(0, 10).startsWith('52534b5401')
+    if (output.op_return_data &&
+      output.op_return_data.length === 92 &&
+      output.op_return_data.substr(0, 10).startsWith('52534b5401')
     ) { // Includes version 01 in the same if
       const opReturnDestAddress = output.op_return_data.substring(10, 50);
       destinationRskAddressFound = opReturnDestAddress.startsWith('0x') ? opReturnDestAddress : `0x${opReturnDestAddress}`;
