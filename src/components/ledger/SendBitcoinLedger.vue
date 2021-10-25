@@ -130,6 +130,8 @@ export default class SendBitcoinLedger extends Vue {
     EnvironmentAccessorService.getEnvironmentVariables().vueAppCoin,
   );
 
+  ledgerServiceSubscriber = (balance: AccountBalance) => this.addBalance(balance);
+
   @State('pegInTx') peginTxState!: PegInTxState;
 
   @Action(constants.PEGIN_TX_ADD_ADDRESSES, { namespace: 'pegInTx' }) setPeginTxAddresses !: any;
@@ -232,7 +234,8 @@ export default class SendBitcoinLedger extends Vue {
   startAskingForBalance() {
     this.sendBitcoinState = 'loading';
     this.ledgerDataReady = false;
-    this.ledgerService.subscribe((balance) => this.addBalance(balance));
+    this.ledgerServiceSubscriber = (balance) => this.addBalance(balance);
+    this.ledgerService.subscribe(this.ledgerServiceSubscriber);
     this.ledgerService.startAskingForBalance(this.peginTxState.sessionId)
       .catch((e) => {
         if (e.statusCode === 27010) {
@@ -257,15 +260,16 @@ export default class SendBitcoinLedger extends Vue {
     if (balanceInformed === undefined) {
       this.deviceError = 'Balance was not found.';
       this.sendBitcoinState = 'error';
-      this.ledgerService.unsubscribe();
+      this.ledgerService.unsubscribe(this.ledgerServiceSubscriber);
       this.showErrorDialog = true;
     }
 
-    this.balances = {
-      legacy: new SatoshiBig(balanceInformed.legacy, 'satoshi'),
-      segwit: new SatoshiBig(balanceInformed.segwit, 'satoshi'),
-      nativeSegwit: new SatoshiBig(balanceInformed.nativeSegwit, 'satoshi'),
-    };
+    // this.balances = {
+    //   legacy: new SatoshiBig(balanceInformed.legacy, 'satoshi'),
+    //   segwit: new SatoshiBig(balanceInformed.segwit, 'satoshi'),
+    //   nativeSegwit: new SatoshiBig(balanceInformed.nativeSegwit, 'satoshi'),
+    // };
+    this.balances = balanceInformed;
   }
 
   @Emit()
