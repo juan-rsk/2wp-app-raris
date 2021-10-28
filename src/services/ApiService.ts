@@ -12,6 +12,8 @@ export default class ApiService {
 
   public static getBalances(sessionId: string,
     addressList?: WalletAddress[]): Promise<AccountBalance> {
+    console.log('Imprimite el session id');
+    console.log(sessionId);
     return new Promise((resolve, reject) => {
       axios.post(`${this.baseURL}/balance`, {
         sessionId,
