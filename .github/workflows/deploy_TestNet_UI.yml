@@ -34,7 +34,7 @@ jobs:
           VUE_APP_MANIFEST_APP_URL=${{ secrets.TESTNET_VUE_APP_MANIFEST_APP_URL }}
           VUE_APP_API_BASE_URL=${{ secrets.TESTNET_VUE_APP_API_BASE_URL }}
           VUE_APP_RSK_NODE_HOST=${{ secrets.TESTNET_VUE_APP_NODE_HOST }}
-          npm build
+          npm run-script build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
