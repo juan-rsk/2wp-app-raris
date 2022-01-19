@@ -1,4 +1,4 @@
-name: 2wp-app deploy UI for TestNet
+name: 2wp-app deploy UI for MainNet
 
 on:
   pull_request:
@@ -30,24 +30,24 @@ jobs:
 
       - name: Build site
         run: >
-          VUE_APP_COIN=${{ secrets.TESTNET_VUE_APP_COIN }} 
+          VUE_APP_COIN=${{ secrets.MAINNET_VUE_APP_COIN }} 
           VUE_APP_MANIFEST_EMAIL=${{ secrets.TESNET_VUE_APP_MANIFEST_EMAIL }}
-          VUE_APP_MANIFEST_APP_URL=${{ secrets.TESTNET_VUE_APP_MANIFEST_APP_URL }}
-          VUE_APP_API_BASE_URL=${{ secrets.TESTNET_VUE_APP_API_BASE_URL }}
-          VUE_APP_RSK_NODE_HOST=${{ secrets.TESTNET_VUE_APP_NODE_HOST }}
+          VUE_APP_MANIFEST_APP_URL=${{ secrets.MAINNET_VUE_APP_MANIFEST_APP_URL }}
+          VUE_APP_API_BASE_URL=${{ secrets.MAINNET_VUE_APP_API_BASE_URL }}
+          VUE_APP_RSK_NODE_HOST=${{ secrets.MAINNET_VUE_APP_NODE_HOST }}
           npm run-script build
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.TESTNET_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.TESTNET_AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.TESTNET_AWS_REGION }}
+          aws-access-key-id: ${{ secrets.MAINNET_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.MAINNET_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.MAINNET_AWS_REGION }}
 
       - name: Deploy site to S3
         run: |
-          aws s3 sync --delete --only-show-errors dist/ ${{ secrets.TESTNET_S3_BUCKET }}
+          aws s3 sync --delete --only-show-errors dist/ ${{ secrets.MAINNET_S3_BUCKET }}
            
       - name: Invalidate CloudFront cache
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.TESTNET_CLOUDFRONT_DISTRIBUTION }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.MAINNET_CLOUDFRONT_DISTRIBUTION }} --paths "/*"
