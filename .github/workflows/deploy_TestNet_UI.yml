@@ -1,4 +1,4 @@
-name: 2wp-app deploy UI for TestNet.
+name: 2wp-app deploy UI for TestNet
 
 on:
   push: 
